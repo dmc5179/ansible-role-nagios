@@ -15,7 +15,7 @@
 - name: Make Plugins
   make:
     chdir: "{{ download_dir }}/{{ pluginsrc }}"
-    target: default
+    target: all
     params:
       NUM_THREADS: 4
 #  creates: "{{ download_dir }}/{{ pluginsrc }}/plugins/check_ping"
