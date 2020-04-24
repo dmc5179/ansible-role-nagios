@@ -3,7 +3,7 @@
 - name: Download and unarchive Nagios
   unarchive:
     src: "{{ nagiosurl }}"
-    dest: "{{ download_dir }}/{{ nagiossrc }}"
+    dest: "{{ download_dir }}"
     remote_src: true
 
 - name: Configure

@@ -38,7 +38,7 @@
     - glibc
     - glibc-common
     - gd
-    - gd-devel
+#    - gd-devel
     - make
     - perl
     - perl-devel
