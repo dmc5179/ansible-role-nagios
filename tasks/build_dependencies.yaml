@@ -1,27 +1,27 @@
 ---
-- name: Enable EPEL (CentOS/RHEL6)
-  package:
-    name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
-    state: present
-  when:
-    - (ansible_distribution == "CentOS" or ansible_distribution == "RedHat") and
-    - (ansible_distribution_major_version == "6")
+#- name: Enable EPEL (CentOS/RHEL6)
+#  package:
+#    name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
+#    state: present
+#  when:
+#    - (ansible_distribution == "CentOS" or ansible_distribution == "RedHat") and
+#    - (ansible_distribution_major_version == "6")
 
 - name: Enable EPEL (Centos/RHEL7)
   package:
     name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
     state: present
-  when:
-    - (ansible_distribution == "CentOS" or ansible_distribution == "RedHat") and
-    - (ansible_distribution_major_version == "7")
+#  when:
+#    - (ansible_distribution == "CentOS" or ansible_distribution == "RedHat") and
+#    - (ansible_distribution_major_version == "7")
 
-- name: Downloading and enable the EPEL repository definitions.
-  package:
-    name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
-    state: present
-  when:
-    - (ansible_distribution == "CentOS" or ansible_distribution == "RedHat") and
-    - (ansible_distribution_major_version == "8")
+#- name: Downloading and enable the EPEL repository definitions.
+#  package:
+#    name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+#    state: present
+#  when:
+#    - (ansible_distribution == "CentOS" or ansible_distribution == "RedHat") and
+#    - (ansible_distribution_major_version == "8")
 
 - name: install apache
   package: pkg={{ item }} state=present

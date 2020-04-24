@@ -6,11 +6,11 @@
     dest: "{{ download_dir }}/{{ pluginsrc }}"
     remote_src: true
 
-- name: ./configure
+- name: Configure
   command:
     cmd: ./configure --with-nagios-user={{ monitoring_user }} --with-nagios-group=nagios --with-openssl=/usr/bin/openssl
     chdir: "{{ download_dir }}/{{ pluginssrc }}"
-  creates: "{{ download_dir }}/{{ pluginssrc }}/Makefile"
+    creates: "{{ download_dir }}/{{ pluginssrc }}/Makefile"
 
 - name: Make Plugins
   make:
@@ -18,10 +18,10 @@
     target: default
     params:
       NUM_THREADS: 4
-  creates: "{{ download_dir }}/{{ pluginssrc }}/plugins/check_ping"
+#  creates: "{{ download_dir }}/{{ pluginssrc }}/plugins/check_ping"
 
 - name: Make Install Plugins
   make:
     chdir: "{{ download_dir }}/{{ pluginssrc }}"
     target: install
-  creates: /usr/local/nagios/libexec/check_ping
+#  creates: /usr/local/nagios/libexec/check_ping
