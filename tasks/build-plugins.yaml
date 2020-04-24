@@ -1,0 +1,27 @@
+---
+
+- name: Download and unarchive Nagios Plugins
+  unarchive:
+    src: "{{ pluginsurl }}"
+    dest: "{{ download_dir }}/{{ pluginsrc }}"
+    remote_src: true
+
+- name: ./configure
+  command:
+    cmd: ./configure --with-nagios-user={{ monitoring_user }} --with-nagios-group=nagios --with-openssl=/usr/bin/openssl
+    chdir: "{{ download_dir }}/{{ pluginssrc }}"
+  creates: "{{ download_dir }}/{{ pluginssrc }}/Makefile"
+
+- name: Make Plugins
+  make:
+    chdir: "{{ download_dir }}/{{ pluginssrc }}"
+    target: default
+    params:
+      NUM_THREADS: 4
+  creates: "{{ download_dir }}/{{ pluginssrc }}/plugins/check_ping"
+
+- name: Make Install Plugins
+  make:
+    chdir: "{{ download_dir }}/{{ pluginssrc }}"
+    target: install
+  creates: /usr/local/nagios/libexec/check_ping

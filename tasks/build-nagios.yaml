@@ -1,0 +1,78 @@
+---
+
+- name: Download and unarchive Nagios
+  unarchive:
+    src: "{{ nagiosurl }}"
+    dest: "{{ download_dir }}/{{ nagiossrc }}"
+    remote_src: true
+
+- name: ./configure
+  command:
+    cmd: ./configure --with-command-group={{ monitoring_command_group }} -with-httpd_conf={{ with_httpd_conf }} --with-nagios-user={{ monitoring_user }}
+    chdir: "{{ download_dir }}/{{ nagiossrc }}"
+  creates: "{{ download_dir }}/{{ nagiossrc }}/Makefile"
+
+- name: Build 'all' target with extra arguments
+  make:
+    chdir: "{{ download_dir }}/{{ nagiossrc }}"
+    target: all
+    params:
+      NUM_THREADS: 4
+  creates: "{{ download_dir }}/{{ nagiossrc }}/base/nagios"
+
+- name: Make install
+  make:
+    chdir: "{{ download_dir }}/{{ nagiossrc }}"
+    target: install
+  creates: /usr/local/nagios/bin/nagios
+
+- name: Make install-config
+  make:
+    chdir: "{{ download_dir }}/{{ nagiossrc }}"
+    target: install-config
+  creates: /usr/local/nagios/etc/nagios.cfg
+
+- name: Make install-commandmode
+  make:
+    chdir: "{{ download_dir }}/{{ nagiossrc }}"
+    target: install-commandmode
+  creates: /usr/local/nagios/var/rw
+
+- name: Make install-devel
+  make:
+    chdir: "{{ download_dir }}/{{ nagiossrc }}"
+    target: install-devel
+  creates: /usr/local/nagios/include/nagios/nagios.h
+
+- name: Make install-webconf
+  make:
+    chdir: "{{ download_dir }}/{{ nagiossrc }}"
+    target: install-webconf
+  creates: "{{ with_httpd_conf }}/nagios.conf"
+  notify: restart apache
+
+- name: Make install-init
+  make:
+    chdir: "{{ download_dir }}/{{ nagiossrc }}"
+    target: install-init
+  creates: /etc/init.d/nagios
+
+- name: Set htpasswd for gui users
+  htpasswd:
+    path: /usr/local/nagios/etc/htpasswd.users
+    name: "{{ item.user }}"
+    password: "{{ item.pass }}"
+    state: present
+  with_items: "{{ nagios_users }}"
+
+# TODO: Not sure if we need this anymore
+# - name: Workaround since service module fails for this version of nagios
+#   raw: service nagios start
+#   when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == '7'
+#   changed_when: False
+
+- name: Ensure Nagios is started
+  service:
+    name: nagios
+    state: started
+    enabled: true

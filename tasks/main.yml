@@ -1,2 +1,36 @@
 ---
 # tasks file for nagios
+
+- name: Ensure download directory is present
+  file:
+    path: "{{ download_dir }}"
+    state: directory
+
+- name: Create nagcmd group
+  group:
+    name: "{{ monitoring_command_group }}"
+    state: present
+
+- name: Create nagios user
+  user:
+    name: "{{ monitoring_user }}"
+    state: present
+    groups: "{{ monitoring_command_group }}"
+
+- name: Add apache user to nagcmd group
+  user:
+    name: "{{ apache_user }}"
+    state: present
+    groups: "{{ monitoring_command_group }}"
+
+- include: build_dependencies.yaml
+
+- include: build-nagios.yaml
+
+- include: build-plugins.yaml
+
+- name: http service state
+  service:
+    name: "{{ apache_service }}"
+    state: started
+    enabled: true
