@@ -24,35 +24,38 @@
 #    - (ansible_distribution_major_version == "8")
 
 - name: install apache
-  package: pkg={{ item }} state=present
-  with_items:
-    - php
-    - httpd
-    - libsemanage-python
-    - libselinux-python
+  package:
+    name:
+      - php
+      - httpd
+#      - libsemanage-python
+#      - libselinux-python
+    state: present
 
 - name: Install Nagios prerequisites for CentOS
-  package: pkg={{ item }} state=present
-  with_items:
-    - gcc
-    - glibc
-    - glibc-common
-    - gd
-#    - gd-devel
-    - make
-    - perl
-    - perl-devel
-    - wget
-    - python-passlib
-    - unzip
+  package:
+    name:
+      - gcc
+      - glibc
+      - glibc-common
+      - gd
+#      - gd-devel
+      - make
+      - perl
+      - perl-devel
+      - wget
+      - python-passlib
+      - unzip
+    state: present
 
 - name: Install plugin prerequisites for CentOS
-  package: pkg={{ item }} state=present
-  with_items:
-    - openssl-devel
-    - fping
-    - openldap-devel
-    - postgresql-devel
-    - radiusclient-ng-devel
-    - samba-client
-    - libsmbclient
+  package:
+    name:
+      - openssl-devel
+      - fping
+      - openldap-devel
+      - postgresql-devel
+      - radiusclient-ng-devel
+      - samba-client
+      - libsmbclient
+    state: present
